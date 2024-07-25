@@ -26,11 +26,24 @@ const MoviesComponent: React.FC = () => {
 
     const fetchMovies = async () => {
         try {
-            const response = await tmdbService.fetchMovies(page);
-            setMovies((prevMovies) => [...prevMovies, ...response.data.results]);
-            if (response.data.page >= response.data.total_pages) {
-                setHasMore(false);
-            }
+            const options = {
+                method: 'GET',
+                headers: {
+                    accept: 'application/json',
+                    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YzNhOGY0YjJiOWFlM2FkMmJiODA2YjMwNTAwYzBlNCIsIm5iZiI6MTcyMTg0MzA5My43NTMxNTIsInN1YiI6IjY2YTEzYzc0YzRlNjNiZGI3NGUwZDhhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-gi8IYHYWQDUzqmIQ7cjYjNPuiTRsqt1Aqg5y2OjJnQ'
+                }
+            };
+            const response = await fetch('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=16', options)
+                .then(response => response.json())
+                .then(response => {
+                    setMovies((prevMovies) => [...prevMovies, ...response.results]);
+                    if (response.page >= response.total_pages) {
+                        setHasMore(false);
+                    }
+                })
+                .catch(err => console.error(err));
+
+
         } catch (error) {
             console.error('Error fetching movies:', error);
         }
