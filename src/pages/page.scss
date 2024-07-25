@@ -1,0 +1,23 @@
+.maincolumn {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);;
+  grid-column: 1/-1;
+
+
+  height: 100vh;
+  //margin: auto;
+  border: 1px solid blueviolet;
+
+  .column {
+    border: 0.1px solid blueviolet;
+    filter: grayscale(100%);
+    filter: blur(5px);
+    background-color: #282c34;
+
+    &:hover {
+      filter: grayscale(0%);
+      filter: blur(0px);
+      background-color: #494c54;
+    }
+  }
+}
