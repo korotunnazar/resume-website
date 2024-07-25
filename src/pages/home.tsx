@@ -7,8 +7,7 @@ const Home = () => {
     return (
         <div className='maincolumn'>
             <Box className = 'column' marginRight = '1px'>
-                HELLO
-                <Box>
+                <Box >
                     <MoviesComponent />
                 </Box>
             </Box>
