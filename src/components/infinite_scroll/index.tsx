@@ -1,9 +1,14 @@
-// src/MoviesComponent.tsx
 import React, { useState, useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useSpring, animated } from 'react-spring';
-import tmdbService from '../fetcher/index';
 import '../../App.css'
+import {Topbar} from "../topbar";
+import {Box} from "@mui/material";
+
+interface CMProps {
+    type: string;
+    genre?: number;
+}
 
 const AnimatedItem: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const props = useSpring({
@@ -15,7 +20,7 @@ const AnimatedItem: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     return <animated.div style={props}>{children}</animated.div>;
 };
 
-const MoviesComponent: React.FC = () => {
+const CollectMovies = ( {genre, type} : CMProps ) => {
     const [movies, setMovies] = useState<any[]>([]);
     const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
@@ -33,7 +38,7 @@ const MoviesComponent: React.FC = () => {
                     Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YzNhOGY0YjJiOWFlM2FkMmJiODA2YjMwNTAwYzBlNCIsIm5iZiI6MTcyMTg0MzA5My43NTMxNTIsInN1YiI6IjY2YTEzYzc0YzRlNjNiZGI3NGUwZDhhZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.-gi8IYHYWQDUzqmIQ7cjYjNPuiTRsqt1Aqg5y2OjJnQ'
                 }
             };
-            const response = await fetch('https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=16', options)
+            const response = await fetch(`https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}`, options)
                 .then(response => response.json())
                 .then(response => {
                     setMovies((prevMovies) => [...prevMovies, ...response.results]);
@@ -49,9 +54,23 @@ const MoviesComponent: React.FC = () => {
         }
     };
 
+    const cutText = (type : string) => {
+        let arr = [];
+        let sub = type.substring(0, 24);
+        arr = sub.split(' ');
+        if (type.length > 30) {
+            arr.pop();
+        }
+        let result = arr.join(' ');
+        result = result.replace(/[:;,-]+|,+$/g, '');
+        return result + ((type.length > 30) ? '...' : '');
+    }
+
     return (
         <div>
-            <h1>Popular Movies</h1>
+            <Box className = 'topbar'>
+                <Topbar type={type}/>
+            </Box>
             <InfiniteScroll
                 dataLength={movies.length}
                 next={() => setPage(page + 1)}
@@ -67,7 +86,9 @@ const MoviesComponent: React.FC = () => {
                     {movies.map((movie) => (
                         <AnimatedItem key={movie.id}>
                             <div className="movie-item">
-                                <h3>{movie.title}</h3>
+                                <Box className = 'movie-item-text'>
+                                    <h3>{cutText(movie.title)}</h3>
+                                </Box>
                                 <img src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} alt={movie.title} />
                             </div>
                         </AnimatedItem>
@@ -78,4 +99,4 @@ const MoviesComponent: React.FC = () => {
     );
 };
 
-export default MoviesComponent;
+export default CollectMovies;

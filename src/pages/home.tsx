@@ -1,27 +1,24 @@
 import React from 'react';
 import "./page.scss";
 import {Box} from "@mui/material";
-import MoviesComponent from "../components/infinite_scroll";
+import CollectMovies from "../components/infinite_scroll";
 
 const Home = () => {
     return (
-        <div className='maincolumn'>
-            <Box className = 'column' marginRight = '1px'>
-                <Box >
-                    <MoviesComponent />
+        <>
+            <div className='maincolumn'>
+                <Box className='column' >
+                    <CollectMovies type="Animations" genre={16}/>
                 </Box>
-            </Box>
-            <Box className = 'column' marginLeft = '1px' marginRight = '1px'>
-                <Box>
+                <Box className='column' >
+                    <CollectMovies type="Movies" genre={18}/>
+                </Box>
+                <Box className='column'>
+                    <CollectMovies type="TV" genre={53}/>
+                </Box>
+            </div>
+        </>
 
-                </Box>
-            </Box>
-            <Box className = 'column' marginLeft = '1px'>
-                <Box>
-
-                </Box>
-            </Box>
-        </div>
     );
 };
 
